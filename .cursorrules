@@ -1,0 +1,50 @@
+# DaFem AI Rules — Cursor-specific
+
+## Project
+DaFem is a data journalism dashboard about feminicide in Brazil (2016-2025). Built with Streamlit + Plotly + pandas. It is NOT a corporate dashboard — it's a tool for social movement advocacy. The design must feel like a data observatory with emotional weight, not a SaaS admin panel.
+
+## Tech constraints
+- Streamlit only (no React, no custom JS beyond what st.markdown allows)
+- Plotly for all charts (px or go, both OK)
+- Data: 5 CSVs in the same directory as app.py
+- Fonts: use system fonts or <link> tags (Google Fonts @import is slow on Streamlit Cloud)
+- No external image files — all visuals must be inline SVG or CSS
+- Deploy: Streamlit Cloud (free tier) — must work with `streamlit run app.py`
+
+## Design direction
+- Dark theme: bg #0D0F12, surface #16181D, border #26292F
+- Primary accent: violet #9D70F5 (cause/movement color)
+- Alert: coral #FF6B6B (deaths), amber #FFB347 (warnings)
+- Typography: "Space Grotesk" for display/numbers, "Inter" for body. NOT Inter for everything.
+- Numbers are the heroes: 48-64px for key metrics, tabular-nums
+- Section titles state findings ("Desemprego NÃO explica"), not descriptions ("Gráfico: desemprego")
+- No ALL-CAPS labels. No generic eyebrows. No middle-dot separators.
+
+## Chart rules
+- Remove or minimize gridlines (rgba(255,255,255,0.03) max)
+- Custom hovertemplate with clean HTML, not default Plotly hover
+- Heatmap: go.Heatmap with custom colorscale, text visible in cells
+- Scatter: state labels always visible, not just on hover
+- Area fills: use rgba violet with gradient, not solid fills
+
+## CSS rules
+- All custom CSS goes in the CSS variable at the top of app.py
+- Metric cards: HTML divs with animation (slideUp on load, staggered delays)
+- Sidebar: hide Streamlit's default radio, inject custom nav with st.markdown
+- Mobile: @media queries for 768px breakpoint, stack columns, reduce font sizes
+
+## When editing app.py
+- Keep the data loading functions untouched (they work and are cached)
+- Keep the Plotly helper `style_plotly()` but feel free to override any layout params
+- The `finding()` helper creates callout boxes — make these more visually distinctive
+- Focus on the "Visão Geral" page first — it's the landing page
+- All text in Portuguese (pt-BR)
+- Sources always cited in footer
+
+## Do NOT
+- Do not use Streamlit's default st.metric (looks generic)
+- Do not use px.imshow for the heatmap (use go.Heatmap instead)
+- Do not add Google Analytics or tracking
+- Do not use ALL-CAPS for section labels
+- Do not make all cards the same height — vary by importance
+- Do not add decorative gradients that don't serve the data story
