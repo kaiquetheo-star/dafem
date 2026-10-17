@@ -1163,8 +1163,9 @@ elif pagina == "Sobre":
 
     st.markdown("""
     <div class="dafem-footer">
-        <strong>DaFem</strong> v1.0 · Squad de Dados — Fora FB! · Outubro 2026<br>
-        Todos os dados são públicos e a análise é reproduzível (scripts Python anexos).<br>
+        <strong>DaFem</strong> v1.2 · Squad de Dados — Fora FB! · Outubro 2026<br>
+        Todos os dados são públicos e a análise é reproduzível — relatório, fontes e
+        scripts na pasta <strong>estudo/</strong> do repositório (github.com/kaiquetheo-star/dafem).<br>
         Este dashboard não coleta dados pessoais e não utiliza cookies de rastreamento.
     </div>
     """, unsafe_allow_html=True)
