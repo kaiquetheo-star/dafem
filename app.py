@@ -652,7 +652,7 @@ def footer():
     st.markdown("""
     <div class="dafem-footer">
         <strong>DaFem</strong> · Squad de Dados — Fora FB! · Outubro 2026 ·
-        Fontes: FBSP 2018–2026 + IBGE/SIDRA · Correlação ≠ causalidade
+        Fontes: FBSP 2018–2026 + IBGE/SIDRA · Padrões que andam juntos não provam causa
     </div>
     """, unsafe_allow_html=True)
 
@@ -682,7 +682,7 @@ with st.sidebar:
         Anuário FBSP 2018–2026<br>
         IBGE/SIDRA PNAD Contínua<br>
         Squad de Dados — Fora FB!<br>
-        <span style="opacity:0.65">Correlação ≠ causalidade</span>
+        <span style="opacity:0.65">Padrões que andam juntos<br>não provam causa</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -728,23 +728,39 @@ if pagina == "Visão Geral":
 
     section(
         "Homicídios caem. Feminicídio sobe.",
-        "Série nacional com faixas de governo. O número sobe atravessando três administrações — com desaceleração em cada mandato.",
+        "A linha vermelha é o TOTAL de mulheres assassinadas — a soma dos feminicídios com os demais "
+        "homicídios. O total cai desde 2022. O feminicídio sobe atravessando três administrações, "
+        "com desaceleração em cada mandato.",
     )
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=br.ano, y=br.hom_abs, name="Total de homicídios de mulheres",
+        x=br.ano, y=br.hom_abs - br.fem_abs, name="Demais homicídios",
         mode="lines",
-        line=dict(color=MUTED, width=1.5),
-        hovertemplate="<b>%{x}</b><br>Total: %{y:,.0f}<extra></extra>",
+        line=dict(color=MUTED, width=1.5, dash="dot"),
+        hovertemplate="<b>%{x}</b><br>Demais homicídios: %{y:,.0f}<extra></extra>",
     ))
     fig.add_trace(go.Scatter(
         x=br.ano, y=br.fem_abs, name="Feminicídios",
         mode="lines+markers",
-        line=dict(color=ACCENT, width=3.5),
+        line=dict(color=ACCENT, width=2.5),
         marker=dict(size=6, color=ACCENT, line=dict(width=0)),
         hovertemplate="<b>%{x}</b><br>Feminicídios: %{y:,.0f}<extra></extra>",
     ))
+    fig.add_trace(go.Scatter(
+        x=br.ano, y=br.hom_abs, name="Total (soma)",
+        mode="lines",
+        line=dict(color=CORAL, width=3.5),
+        hovertemplate="<b>%{x}</b><br>Total de mulheres assassinadas: %{y:,.0f}<extra></extra>",
+    ))
+    fig.add_annotation(
+        x=2025, y=3539,
+        ax=-78, ay=64,
+        text="<b>−10% desde 2022</b>",
+        showarrow=True, arrowhead=2, arrowcolor=CORAL, arrowsize=0.9,
+        font=dict(size=12, color=CORAL, family=f"{FONT_BODY}, sans-serif"),
+        align="right",
+    )
     for x0, x1, nome in [(2015.5, 2018.5, "Temer"), (2018.5, 2022.5, "Bolsonaro"), (2022.5, 2025.5, "Lula")]:
         fig.add_vrect(x0=x0, x1=x1, fillcolor=ACCENT_DEEP, opacity=0.03, line_width=0)
         fig.add_annotation(
@@ -782,7 +798,8 @@ if pagina == "Visão Geral":
 
     section(
         "Raça é estrutura, não conjuntura",
-        "Percentual de vítimas por cor/raça nos anos com dado disponível. Mulheres negras são ~56% da população feminina e 60–67% das vítimas, sempre.",
+        "Percentual de vítimas por cor/raça nos anos com dado disponível. Mulheres negras são ~55% "
+        "da população feminina e 60–67% das vítimas, sempre.",
     )
 
     st.markdown(f"""
@@ -793,7 +810,7 @@ if pagina == "Visão Geral":
         <div class="stat-item"><span class="num" style="color:{ACCENT}">64%</span><span class="lbl">negras (2023–24)</span></div>
         <div class="stat-item"><span class="num" style="color:{ACCENT}">65%</span><span class="lbl">negras (2025)</span></div>
         <div class="stat-item" style="border-left:1px solid {BORDER}">
-            <span class="num" style="color:{MUTED}">56%</span><span class="lbl">da pop. feminina (IBGE)</span>
+            <span class="num" style="color:{MUTED}">55%</span><span class="lbl">da pop. feminina (IBGE)</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -945,7 +962,9 @@ elif pagina == "Variáveis":
 
     section(
         "Desemprego NÃO explica o mapa",
-        "Testamos 4 variáveis contra a taxa de feminicídio nos 27 estados (Spearman, média 2023–25). O resultado inverte a narrativa.",
+        "Esta análise compara estados entre si — não prova que uma coisa causa a outra, mas mostra "
+        "quais padrões andam juntos. O número ρ varia de −1 a +1: quanto mais longe do zero, mais "
+        "forte a relação. Medimos 4 variáveis contra a taxa de feminicídio nos 27 estados (média 2023–25).",
     )
 
     st.markdown(finding("""
@@ -958,8 +977,8 @@ elif pagina == "Variáveis":
     if not matriz.empty:
         var_map = {
             "desemp": ("Desemprego feminino (%)", "−0,43*", "Negativa: mais desemprego = menos feminicídio"),
-            "informal": ("Informalidade (%)", "−0,25", "Não significante (proxy Bolsa Família)"),
-            "mpu_conc": ("MPU concedida /100k", "+0,45*", "Positiva: sistema reage, não previne"),
+            "informal": ("Informalidade (%)", "−0,25", "Sem relação clara entre estados"),
+            "mpu_conc": ("MPU concedida /100k", "+0,44*", "Positiva: sistema reage, não previne"),
             "descump": ("Descumprimento MPU /100k", "+0,46*", "Positiva: onde mais MPU falha, mais mortes"),
         }
 
@@ -1010,24 +1029,24 @@ elif pagina == "Variáveis":
         </div>
         """, unsafe_allow_html=True)
 
-        section("Matriz completa", "Todas as correlações testadas, média 2023–25, n=27 UFs.")
+        section("Matriz completa", "Todas as correlações testadas, média 2023–25, 27 UFs.")
         st.markdown(f"""
         <div class="stat-bar">
             <div class="stat-item">
                 <span class="num" style="color:{CORAL}">−0,43*</span>
-                <span class="lbl">Desemprego<br>(p=0,017)</span>
+                <span class="lbl">Desemprego<br>(p=0,024)</span>
             </div>
             <div class="stat-item">
                 <span class="num" style="color:{MUTED}">−0,25</span>
-                <span class="lbl">Informalidade<br>(p=0,20)</span>
+                <span class="lbl">Informalidade<br>(p=0,21)</span>
             </div>
             <div class="stat-item">
-                <span class="num" style="color:{ACCENT}">+0,45*</span>
-                <span class="lbl">MPU concedida<br>(p=0,015)</span>
+                <span class="num" style="color:{ACCENT}">+0,44*</span>
+                <span class="lbl">MPU concedida<br>(p=0,023)</span>
             </div>
             <div class="stat-item">
                 <span class="num" style="color:{ACCENT}">+0,46*</span>
-                <span class="lbl">Descumprimento<br>(p=0,010)</span>
+                <span class="lbl">Descumprimento<br>(p=0,016)</span>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1053,10 +1072,27 @@ elif pagina == "Sobre":
 
     st.markdown(finding("""
         <strong>Equipe:</strong> Squad de Dados — Fora FB!<br>
-        <strong>Metodologia:</strong> Correlação de posto (Spearman), n=27 UFs, ecológica.
-        Correlação não implica causalidade.<br>
+        <strong>Metodologia:</strong> comparamos os 27 estados entre si (correlação de posto,
+        Spearman). Esta análise mostra quais padrões andam juntos — <strong>não prova que uma
+        coisa causa a outra</strong>.<br>
         <strong>Período:</strong> Outubro de 2026
     """), unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="section-title" style="font-size:20px">O que os dados não dão para afirmar</div>
+    <div class="section-sub">
+        · Correlação entre estados não é causa individual (falácia ecológica) — não dá para dizer
+        que uma pessoa específica morreu "por causa" de desemprego ou de MPU.<br><br>
+        · Segurança pública é competência estadual — a série nacional atravessa 3 governos, mas
+        nenhum número aqui atribui responsabilidade a um governo específico.<br><br>
+        · Parte da alta do feminicídio é melhoria de registro: os estados passaram a classificar
+        melhor esses crimes após a Lei 13.104/2015.<br><br>
+        · Os totais nacionais seguem a edição mais recente do Anuário (que revisa anos anteriores);
+        para 2019, a soma dos estados diverge do total nacional (4 feminicídios e 236 homicídios
+        de mulheres) porque a revisão estadual desse ano não foi publicada.<br><br>
+        · MPU concedida: dado disponível para 26 UFs (Minas Gerais não divulgou).
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("""
     <div class="section-title" style="font-size:20px">Fontes</div>
@@ -1064,8 +1100,10 @@ elif pagina == "Sobre":
         <strong style="color:#E8EAEF">Anuário Brasileiro de Segurança Pública</strong> — edições 2018–2026, do
         Fórum Brasileiro de Segurança Pública (FBSP), com dados das SSPs estaduais.<br><br>
         <strong style="color:#E8EAEF">IBGE/SIDRA</strong> — PNAD Contínua trimestral (tabela 4093), variáveis
-        taxa de desocupação e taxa de informalidade, recorte sexo feminino.<br><br>
-        <strong style="color:#E8EAEF">Dados de medidas protetivas</strong> — Anuários FBSP 2025 (T31) e 2026 (T27).
+        taxa de desocupação e taxa de informalidade, recorte sexo feminino; população feminina
+        por cor/raça do Censo 2022.<br><br>
+        <strong style="color:#E8EAEF">Dados de medidas protetivas</strong> — Anuário FBSP 2025 (T31: MPU
+        concedidas) e Anuário 2026 (T22: vítimas com MPU ativa; T27: descumprimentos).
     </div>
     """, unsafe_allow_html=True)
 

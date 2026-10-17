@@ -21,7 +21,7 @@ Todos os dados são públicos:
 
 - **Anuário Brasileiro de Segurança Pública** (FBSP), edições 2018–2026
 - **IBGE/SIDRA** — PNAD Contínua (tabela 4093, mulheres)
-- **Medidas protetivas** — Anuários FBSP 2025 (T31) e 2026 (T27)
+- **Medidas protetivas** — Anuário FBSP 2025 (T31: MPU concedidas) e Anuário 2026 (T22: vítimas com MPU ativa; T27: descumprimentos)
 
 ## Estrutura
 
@@ -38,8 +38,8 @@ matriz_variaveis_uf_2023_25.csv     ← base para correlações
 
 ## Aviso metodológico
 
-Correlação de posto (Spearman), n=27 UFs, estudo ecológico.
-**Correlação não implica causalidade.**
+Correlação de posto (Spearman) comparando os 27 estados entre si (estudo ecológico).
+**Esta análise mostra quais padrões andam juntos — não prova que uma coisa causa a outra.**
 
 ---
 
