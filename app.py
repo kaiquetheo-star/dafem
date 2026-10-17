@@ -162,11 +162,64 @@ section[data-testid="stSidebar"] * {{
     margin-bottom: 4px;
 }}
 
-.nav-brand p {{
+.nav-brand .brand-tag {{
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin: 10px 0 0;
+    line-height: 1.35;
+}}
+
+.nav-brand .brand-sub {{
+    font-family: var(--font-body);
     font-size: 12px;
     color: var(--muted);
-    margin: 8px 0 0;
-    line-height: 1.45;
+    margin: 2px 0 0;
+    line-height: 1.4;
+}}
+
+/* Botões de recolher/expandir a sidebar: o ícone nativo é uma ligadura da fonte
+   Material Symbols ("keyboard_double_arrow_left/right") — se a fonte não carrega,
+   o nome aparece escrito cru. Apagamos o texto e desenhamos o chevron em CSS puro. */
+[data-testid="stSidebarCollapseButton"] span,
+[data-testid="stExpandSidebarButton"] span {{
+    display: none;
+}}
+
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stExpandSidebarButton"] button {{
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}}
+
+[data-testid="stSidebarCollapseButton"] button::after,
+[data-testid="stExpandSidebarButton"] button::after {{
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-left: 2px solid rgba(232, 234, 239, 0.55);
+    border-bottom: 2px solid rgba(232, 234, 239, 0.55);
+    display: block;
+    transition: border-color 0.15s ease;
+}}
+
+[data-testid="stSidebarCollapseButton"] button::after {{
+    transform: rotate(45deg);
+}}
+
+[data-testid="stExpandSidebarButton"] button::after {{
+    transform: rotate(225deg);
+}}
+
+[data-testid="stSidebarCollapseButton"] button:hover::after,
+[data-testid="stExpandSidebarButton"] button:hover::after {{
+    border-color: var(--text);
 }}
 
 section[data-testid="stSidebar"] div[role="radiogroup"] {{
@@ -666,7 +719,8 @@ with st.sidebar:
             <span class="brand-dot"></span>
             <h1>DaFem</h1>
         </div>
-        <p>Observatório de feminicídio<br>Brasil · 2016–2025</p>
+        <p class="brand-tag">Observatório de Feminicídio</p>
+        <p class="brand-sub">Brasil · 2016–2025</p>
     </div>
     """, unsafe_allow_html=True)
 
